@@ -1,7 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import OrdersSection from '@/components/dashboard/orders-section.vue'
+</script>
 
 <template>
-	<div class="px-2">
-		<h1 class="text-3xl font-bold underline">Dashboard page</h1>
+	<div class="px-2 py-4 font-manrope">
+		<OrdersSection />
 	</div>
 </template>
