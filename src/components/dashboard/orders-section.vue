@@ -10,6 +10,7 @@ import {
 	TableRow,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
+import { Header } from '@/components/ui/header'
 import { ref } from 'vue'
 
 const content = ref('$250.00 Lorem ipsum dolor sit amet, consectetur adipiscing elit.')
@@ -36,12 +37,13 @@ const toggleContent = () => {
 
 <template>
 	<section class="content orders">
-		<h1 class="title font-extrabold sm:text-2xl md:text-3xl text-xl flex items-center">
-			<Logs class="sm:w-7 sm:h-7 h-5 w-5 mr-4" /> Buyurtmalar
-		</h1>
+		<Header variant="default"> <Logs class="sm:w-7 sm:h-7 h-5 w-5 mr-4" /> Buyurtmalar </Header>
 		<div class="mt-6 max-w-full overflow-x-auto">
-			<Table class="mt-6 min-w-[600px]">
-				<TableCaption>A list of your recent invoices.</TableCaption>
+			<Table class="mt-6 min-w-[600px] text-neutral-900 dark:text-neutral-50">
+				<TableCaption
+					>Eng yangi 5 ta buyurtma.
+					<RouterLink to="/orders" class="underline">To'liq ko'rish</RouterLink></TableCaption
+				>
 				<TableHeader>
 					<TableRow>
 						<TableHead class="w-[100px]"> ID </TableHead>
@@ -55,7 +57,7 @@ const toggleContent = () => {
 				<TableBody class="sm:text-lg">
 					<TableRow>
 						<TableCell class="font-bold"> AD128128 </TableCell>
-						<TableCell><Badge variant="warning">Yo'lda</Badge></TableCell>
+						<TableCell><Badge variant="success">Yo'lda</Badge></TableCell>
 						<TableCell>+998 97 766 76 67</TableCell>
 						<TableCell> 120,000 </TableCell>
 						<TableCell class="relative max-w-[150px]">
@@ -69,7 +71,7 @@ const toggleContent = () => {
 							<span v-else>{{ content }}</span>
 
 							<!-- More/Less button -->
-							<button @click="toggleContent" class="ml-2 text-blue-600 hover:underline">
+							<button @click="toggleContent" class="ml-2 text-blue-600 hover:underline text-sm">
 								{{ showMore ? 'Less' : 'More' }}
 							</button>
 						</TableCell>

@@ -8,14 +8,14 @@ export const badgeVariants = cva(
 		variants: {
 			variant: {
 				default:
-					'border-transparent bg-neutral-900 text-neutral-50 shadow hover:bg-neutral-900/80 dark:bg-neutral-50 dark:text-neutral-900 dark:hover:bg-neutral-50/80',
+					'border-transparent bg-neutral-900 text-neutral-50 shadow dark:bg-neutral-50 dark:text-neutral-900',
 				secondary:
-					'border-transparent bg-neutral-100 text-neutral-900 hover:bg-neutral-100/80 dark:bg-neutral-800 dark:text-neutral-50 dark:hover:bg-neutral-800/80',
+					'border-transparent bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-50',
 				destructive:
-					'border-transparent bg-red-500 text-neutral-50 shadow hover:bg-red-500/80 dark:bg-red-900 dark:text-neutral-50 dark:hover:bg-red-900/80',
-				outline: 'text-neutral-950 dark:text-neutral-50',
-				success: 'bg-green-500 text-white dark:bg-green-50 dark:text-white border-transparent',
-				warning: 'bg-yellow-500 text-white dark:bg-yellow-50 dark:text-white border-transparent',
+					'border-transparent bg-red-500 text-neutral-50 shadow dark:bg-red-900 dark:text-neutral-50',
+				outline: 'text-neutral-950 bg-neutral-50 dark:text-neutral-50 dark:bg-neutral-950',
+				success: 'bg-green-500 text-white dark:bg-green-700 dark:text-white border-transparent',
+				warning: 'bg-yellow-500 text-white dark:bg-yellow-700 dark:text-white border-transparent',
 			},
 		},
 		defaultVariants: {

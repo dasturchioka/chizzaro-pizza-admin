@@ -1,10 +1,24 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import { CarFront, Home, Logs, Pizza, User } from 'lucide-vue-next'
+import { Switch } from '@/components/ui/switch'
 
 const sidebarOpen = ref(false)
+const isDarkMode = ref(false)
 const aside = ref<HTMLElement>()
+
+const darkModeAlreadyHere = computed(() => {
+	const classExist = document.body.classList.contains('dark')
+
+	if (!classExist) {
+		isDarkMode.value = false
+	} else {
+		isDarkMode.value = true
+	}
+
+	return classExist
+})
 
 const openSidebar = () => {
 	if (!sidebarOpen.value) sidebarOpen.value = true
@@ -12,6 +26,27 @@ const openSidebar = () => {
 
 const closeSidebar = () => {
 	if (sidebarOpen.value) sidebarOpen.value = false
+}
+
+const toggleDarkMode = (e: boolean) => {
+	if (e) {
+		const classExist = document.body.classList.contains('dark')
+
+		if (!classExist) {
+			document.body.classList.add('dark')
+		}
+
+		return
+	}
+
+	if (!e) {
+		const classExist = document.body.classList.contains('dark')
+
+		if (classExist) {
+			document.body.classList.remove('dark')
+		}
+		return
+	}
 }
 
 onClickOutside(aside, event => closeSidebar())
@@ -25,7 +60,7 @@ onClickOutside(aside, event => closeSidebar())
 			<button
 				@click="openSidebar"
 				type="button"
-				class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+				class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-neutral-500 rounded-lg sm:hidden hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-200 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:ring-neutral-600"
 			>
 				<span class="sr-only">Open sidebar</span>
 				<svg
@@ -50,51 +85,51 @@ onClickOutside(aside, event => closeSidebar())
 				:class="[sidebarOpen ? 'translate-x-0' : '-translate-x-full']"
 			>
 				<div
-					class="h-full transition-all w-full sm:translate-x-0 px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 font-raleway"
+					class="h-full transition-all w-full sm:translate-x-0 px-3 py-4 overflow-y-auto bg-neutral-50 dark:bg-neutral-800 font-raleway border-r"
 				>
 					<ul class="space-y-2 font-semibold">
 						<RouterLink
 							to="/"
-							class="link flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+							class="link flex items-center p-2 text-neutral-900 rounded-lg dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 group"
 						>
 							<Home
-								class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+								class="flex-shrink-0 w-5 h-5 text-neutral-500 transition duration-75 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white"
 							/>
 							<span class="flex-1 ms-3 whitespace-nowrap">Bosh sahifa</span>
 						</RouterLink>
 						<RouterLink
 							to="/orders"
-							class="link flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+							class="link flex items-center p-2 text-neutral-900 rounded-lg dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 group"
 						>
 							<Logs
-								class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+								class="flex-shrink-0 w-5 h-5 text-neutral-500 transition duration-75 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white"
 							/>
 							<span class="flex-1 ms-3 whitespace-nowrap">Buyurtmalar</span>
 						</RouterLink>
 						<RouterLink
 							to="/users"
-							class="link flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+							class="link flex items-center p-2 text-neutral-900 rounded-lg dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 group"
 						>
 							<User
-								class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+								class="flex-shrink-0 w-5 h-5 text-neutral-500 transition duration-75 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white"
 							/>
 							<span class="flex-1 ms-3 whitespace-nowrap">Mijozlar</span>
 						</RouterLink>
 						<RouterLink
 							to="/menu"
-							class="link flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+							class="link flex items-center p-2 text-neutral-900 rounded-lg dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 group"
 						>
 							<Pizza
-								class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+								class="flex-shrink-0 w-5 h-5 text-neutral-500 transition duration-75 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white"
 							/>
 							<span class="flex-1 ms-3 whitespace-nowrap">Menu</span>
 						</RouterLink>
 						<RouterLink
 							to="/couriers"
-							class="link flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+							class="link flex items-center p-2 text-neutral-900 rounded-lg dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-700 group"
 						>
 							<CarFront
-								class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+								class="flex-shrink-0 w-5 h-5 text-neutral-500 transition duration-75 dark:text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-white"
 							/>
 							<span class="flex-1 ms-3 whitespace-nowrap">Kuryerlar</span>
 						</RouterLink>
@@ -104,18 +139,29 @@ onClickOutside(aside, event => closeSidebar())
 		</div>
 
 		<!-- Main Content -->
-		<div class="main-content flex-1 p-4 sm:ml-64">
-			<RouterView />
+		<div class="main-content flex-1 p-4 sm:ml-64 overflow-x-auto">
+			<div class="dark-mode flex items-center space-x-4 sm:mb-6 mb-2">
+				<Switch
+					@update:checked="toggleDarkMode"
+					:default-checked="darkModeAlreadyHere"
+					v-model:checked="isDarkMode"
+					id="check-dark-mode"
+				/>
+				<label for="check-dark-mode" class="text-neutral-900 dark:text-neutral-50 font-manrope"
+					>Qorong'u rejim</label
+				>
+			</div>
+			<RouterView class="py-4 font-manrope" />
 		</div>
 	</div>
 </template>
 
 <style scoped>
 .link.router-link-active.router-link-exact-active {
-	@apply bg-gray-200 dark:bg-gray-700;
+	@apply bg-neutral-200 dark:bg-neutral-700;
 }
 
 .link.router-link-active.router-link-exact-active svg {
-	@apply text-gray-900 dark:text-white;
+	@apply text-neutral-900 dark:text-white;
 }
 </style>
