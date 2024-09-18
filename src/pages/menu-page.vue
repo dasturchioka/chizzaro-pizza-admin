@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { Header } from '@/components/ui/header'
-import { Pizza, CirclePlus, Trash, CheckCheck, RotateCcw } from 'lucide-vue-next'
+import { Pizza, CirclePlus, Trash, CheckCheck, RotateCcw, CircleMinus } from 'lucide-vue-next'
 import { useItems } from '@/stores/items'
 import { storeToRefs } from 'pinia'
 import Button from '@/components/ui/button/Button.vue'
@@ -17,6 +17,13 @@ import {
 	AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import ItemCategory from '@/components/menu/item-category.vue'
+import CreateNewCategory from '@/components/menu/create-new-category.vue'
+
+const showCreateCategory = ref(false)
+
+const toogleCreateCategory = () => {
+	showCreateCategory.value = !showCreateCategory.value
+}
 
 const itemsStore = useItems()
 
@@ -84,9 +91,15 @@ const deleteAll = () => {
 					variant="outline"
 					><RotateCcw class="w-4 h-4" />
 				</Button>
-				<Button class="font-semibold"><CirclePlus class="w-4 h-4 mr-2" /> Yangi kategoriya</Button>
+				<Button v-show="!showCreateCategory" class="font-semibold" @click="toogleCreateCategory"
+					><CirclePlus class="w-4 h-4 mr-2" /> Yangi kategoriya</Button
+				>
+				<Button v-show="showCreateCategory" class="font-semibold" @click="toogleCreateCategory"
+					><CircleMinus class="w-4 h-4 mr-2" /> Bekor qilish</Button
+				>
 			</div>
 		</div>
+		<CreateNewCategory v-show="showCreateCategory" />
 		<section class="foods-on-menu w-full">
 			<div class="pb-8 sm:mt-6 mt-2 w-full" v-for="(item, category) in items">
 				<ItemCategory :category="category as string" :items="item" />

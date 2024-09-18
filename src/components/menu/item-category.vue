@@ -1,14 +1,16 @@
 <script lang="ts" setup>
-import { Items } from '@/stores/items'
 import Header from '../ui/header/Header.vue'
-import { computed } from 'vue'
-import Item from './item.vue'
+
+import Button from '../ui/button/Button.vue'
+import { CirclePlus } from 'lucide-vue-next'
+import { type Item as ItemType } from '@/stores/items'
+import Item  from './item.vue';
 
 // const selectedItemsNumber = computed(() => {
 // 	return `Tanlandi: <b>${selectedItems.value.length}</b> ta element`
 // })
 
-const props = defineProps<{ category: string; items: Item[] }>()
+const props = defineProps<{ category: string; items: ItemType[] }>()
 </script>
 
 <template>
@@ -25,8 +27,11 @@ const props = defineProps<{ category: string; items: Item[] }>()
 				</div>
 			</div>
 		</div>
-		<span class="opacity-50 text-neutral-900 dark:text-neutral-50"
-			>Jami <b>{{ items.length }}</b> ta</span
-		>
+		<div class="bottom flex items-center justify-between flex-wrap gap-8 mt-4">
+			<span class="opacity-50 text-neutral-900 dark:text-neutral-50"
+				>Jami <b>{{ items.length }}</b> ta</span
+			>
+			<Button><CirclePlus class="mr-2 w-4 h-4" /> Yangi {{ props.category }}</Button>
+		</div>
 	</div>
 </template>
