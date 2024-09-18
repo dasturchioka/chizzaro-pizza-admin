@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import Header from '../ui/header/Header.vue'
 
-import Button from '../ui/button/Button.vue'
+import { type Item as ItemType } from '@/stores/category-items'
 import { CirclePlus } from 'lucide-vue-next'
-import { type Item as ItemType } from '@/stores/items'
-import Item  from './item.vue';
+import Button from '../ui/button/Button.vue'
+import Item from './item.vue'
 
 // const selectedItemsNumber = computed(() => {
 // 	return `Tanlandi: <b>${selectedItems.value.length}</b> ta element`

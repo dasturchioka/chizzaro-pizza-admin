@@ -1,10 +1,6 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue'
-import { Header } from '@/components/ui/header'
-import { Pizza, CirclePlus, Trash, CheckCheck, RotateCcw, CircleMinus } from 'lucide-vue-next'
-import { useItems } from '@/stores/items'
-import { storeToRefs } from 'pinia'
-import Button from '@/components/ui/button/Button.vue'
+import CreateNewCategory from '@/components/menu/create-new-category.vue'
+import ItemCategory from '@/components/menu/item-category.vue'
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -16,8 +12,12 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import ItemCategory from '@/components/menu/item-category.vue'
-import CreateNewCategory from '@/components/menu/create-new-category.vue'
+import Button from '@/components/ui/button/Button.vue'
+import { Header } from '@/components/ui/header'
+import { useItems } from '@/stores/category-items'
+import { CheckCheck, CirclePlus, Pizza, RotateCcw, Trash, CircleMinus } from 'lucide-vue-next'
+import { storeToRefs } from 'pinia'
+import { computed, onMounted, ref } from 'vue'
 
 const showCreateCategory = ref(false)
 
@@ -55,7 +55,7 @@ const deleteAll = () => {
 				class="opacity-50 text-neutral-900 dark:text-neutral-50"
 				v-html="selectedItemsNumber"
 			></span>
-			<div class="buttons flex items-center space-x-4 flex-wrap">
+			<div class="buttons flex items-center flex-wrap">
 				<AlertDialog>
 					<AlertDialogTrigger as-child>
 						<Button size="icon" v-show="displayActionButton" variant="destructive"
@@ -89,6 +89,7 @@ const deleteAll = () => {
 					size="icon"
 					v-show="displayActionButton"
 					variant="outline"
+					class="mr-4"
 					><RotateCcw class="w-4 h-4" />
 				</Button>
 				<Button v-show="!showCreateCategory" class="font-semibold" @click="toogleCreateCategory"
@@ -101,8 +102,8 @@ const deleteAll = () => {
 		</div>
 		<CreateNewCategory v-show="showCreateCategory" />
 		<section class="foods-on-menu w-full">
-			<div class="pb-8 sm:mt-6 mt-2 w-full" v-for="(item, category) in items">
-				<ItemCategory :category="category as string" :items="item" />
+			<div class="pb-8 sm:mt-6 mt-2 w-full" v-for="(i, index) in items" :key="index">
+				<ItemCategory :category="i.name" :items="i.items" />
 			</div>
 		</section>
 	</div>

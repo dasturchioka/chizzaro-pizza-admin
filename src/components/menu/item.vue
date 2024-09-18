@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import { Checkbox } from '../ui/checkbox'
-import { Item } from '@/stores/items'
-import { useItems } from '@/stores/items'
+import { Checkbox  } from '../ui/checkbox'
+import { Item } from '@/stores/category-items'
+import { useItems } from '@/stores/category-items'
 import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import Button from '../ui/button/Button.vue'
+import { Pencil } from 'lucide-vue-next'
 const props = defineProps<{ item: Item }>()
 
 const itemsStore = useItems()
+
+const itemSelected = ref(false)
 
 const { selectedItems } = storeToRefs(itemsStore)
 
@@ -21,11 +25,14 @@ const selectItem = async (checked: boolean) => {
 }
 
 const isItemSelected = computed((): boolean | 'indeterminate' | undefined => {
-
 	const isItemAvailable = selectedItems.value.find(i => i.id === props.item.id)
 
-	if (isItemAvailable) return true
+	if (isItemAvailable) {
+		itemSelected.value = true
+		return true
+	}
 
+	itemSelected.value = false
 	return false
 })
 </script>
@@ -38,11 +45,14 @@ const isItemSelected = computed((): boolean | 'indeterminate' | undefined => {
 		]"
 	>
 		<Checkbox
+			v-model:checked="itemSelected"
 			class="absolute left-4 top-4"
-			v-model:checked="isItemSelected"
 			@update:checked="selectItem"
 		/>
-		<img :src="item.image" alt="pizza image" class="w-32 h-32 mb-2" />
+		<Button size="icon" variant="ghost" class="absolute right-2 top-1"><Pencil class="w-4 h-4"/></Button>
+		<div class="img overflow-hidden w-auto h-32">
+			<img :src="item.img" alt="pizza image" class="w-full h-full mb-2 object-cover" />
+		</div>
 		<div class="text text-left self-start my-2">
 			<h3 class="text-xl font-extrabold">{{ item.name }}</h3>
 			<p class="text-3xl font-bold">{{ item.price }}</p>

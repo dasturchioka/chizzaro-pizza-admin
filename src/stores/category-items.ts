@@ -3,24 +3,26 @@ import { itemsInstance } from '@/http'
 import { ref } from 'vue'
 import { toast } from 'vue-sonner'
 
+export interface CategoryOfItems {
+	id: string
+	name: string
+	items: Item[]
+	[key: string]: any
+}
+
 export interface Item {
 	id: string
 	name: string
 	size: string
 	price: string
 	quantity: number
-	image: string
-	selected: boolean
+	img: string
 	category: string
-}
-
-export interface Items {
-	[key: string]: Item[]
 }
 
 export const useItems = defineStore('items-store', () => {
 	const id = ref('items-store')
-	const items = ref<Items>()
+	const items = ref<CategoryOfItems[]>()
 	const selectedItems = ref<Item[]>([])
 
 	async function getAllItems() {
@@ -52,6 +54,7 @@ export const useItems = defineStore('items-store', () => {
 			}
 
 			selectedItems.value.push(item)
+			console.log(selectedItems.value)
 		} catch (error: any) {
 			console.log(error)
 			toast(error.message || 'Xatolik yuzaga keldi')
@@ -78,10 +81,7 @@ export const useItems = defineStore('items-store', () => {
 	async function selectAllItems() {
 		if (!items.value) return
 
-		const allItems = []
-
-		// Extract and flatten the pizza and drink arrays, then push them into the `allItems` array
-		allItems.push(...Object.values(items.value).flat())
+		const allItems = items.value.flatMap(category => category.items)
 
 		allItems.forEach(item => {
 			// Check if the item is already in selectedItems (based on the `name` property)
@@ -92,8 +92,6 @@ export const useItems = defineStore('items-store', () => {
 				selectedItems.value.push(item)
 			}
 		})
-
-		return
 	}
 
 	return {
