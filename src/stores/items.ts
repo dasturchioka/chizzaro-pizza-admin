@@ -10,9 +10,11 @@ export interface Item {
 	price: string
 	quantity: number
 	image: string
+	selected: boolean
+	category: string
 }
 
-interface Items {
+export interface Items {
 	[key: string]: Item[]
 }
 
@@ -69,5 +71,39 @@ export const useItems = defineStore('items-store', () => {
 		}
 	}
 
-	return { getAllItems, items, selectedItems, selectItem, deselectItem, id }
+	async function clearSelectedItems() {
+		selectedItems.value.length = 0
+	}
+
+	async function selectAllItems() {
+		if (!items.value) return
+
+		const allItems = []
+
+		// Extract and flatten the pizza and drink arrays, then push them into the `allItems` array
+		allItems.push(...Object.values(items.value).flat())
+
+		allItems.forEach(item => {
+			// Check if the item is already in selectedItems (based on the `name` property)
+			const isItemSelected = selectedItems.value.some(selected => selected.id === item.id)
+
+			// If not found, push it into selectedItems
+			if (!isItemSelected) {
+				selectedItems.value.push(item)
+			}
+		})
+
+		return
+	}
+
+	return {
+		getAllItems,
+		items,
+		selectedItems,
+		selectItem,
+		deselectItem,
+		clearSelectedItems,
+		selectAllItems,
+		id,
+	}
 })
