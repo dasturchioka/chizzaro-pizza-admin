@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { itemsInstance } from '@/http'
+import { categoryInstance, itemsInstance } from '@/http'
 import { ref } from 'vue'
 import { toast } from 'vue-sonner'
 
@@ -24,6 +24,60 @@ export const useItems = defineStore('items-store', () => {
 	const id = ref('items-store')
 	const items = ref<CategoryOfItems[]>()
 	const selectedItems = ref<Item[]>([])
+	const itemTypes = ref<{ name: string; isOnTheBase: boolean }[]>([])
+
+	async function createCategory(name: string) {
+		try {
+			const response = await categoryInstance.post('/create', { name })
+
+			if (!response) {
+				toast("Yuklashda xatolik bo'ldi")
+				return
+			}
+
+			items.value?.unshift(response.data.category)
+			itemTypes.value = response.data.categoryTypes
+		} catch (error: any) {
+			console.log(error)
+			toast(
+				error.message ||
+					error.response.data.msg ||
+					'Xatolik yuzaga keldi, boshqatdan ishga tushiring'
+			)
+		}
+	}
+
+	async function getCategoryTypes() {
+		try {
+			const response = await categoryInstance.get('/get-category-types')
+
+			if (!response) {
+				toast("Yuklashda xatolik bo'ldi")
+				return
+			}
+
+			if (response.data.status === 'bad') {
+				return
+			}
+
+			itemTypes.value = response.data.categories
+		} catch (error: any) {
+			console.log(error)
+			toast(
+				error.message ||
+					error.response.data.msg ||
+					'Xatolik yuzaga keldi, boshqatdan ishga tushiring'
+			)
+		}
+	}
+
+	async function createItem(data: FormData) {
+		try {
+			const response = await itemsInstance.post('/create')
+		} catch (error) {
+			
+		}
+	}
 
 	async function getAllItems() {
 		try {
@@ -102,6 +156,9 @@ export const useItems = defineStore('items-store', () => {
 		deselectItem,
 		clearSelectedItems,
 		selectAllItems,
+		createCategory,
+		getCategoryTypes,
+		itemTypes,
 		id,
 	}
 })
