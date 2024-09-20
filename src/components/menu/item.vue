@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { Checkbox  } from '../ui/checkbox'
+import { Checkbox } from '../ui/checkbox'
 import { Item } from '@/stores/category-items'
 import { useItems } from '@/stores/category-items'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 import Button from '../ui/button/Button.vue'
 import { Pencil } from 'lucide-vue-next'
+import { config } from '@/config'
+
 const props = defineProps<{ item: Item }>()
 
 const itemsStore = useItems()
@@ -49,9 +51,15 @@ const isItemSelected = computed((): boolean | 'indeterminate' | undefined => {
 			class="absolute left-4 top-4"
 			@update:checked="selectItem"
 		/>
-		<Button size="icon" variant="ghost" class="absolute right-2 top-1"><Pencil class="w-4 h-4"/></Button>
+		<Button size="icon" variant="ghost" class="absolute right-2 top-1"
+			><Pencil class="w-4 h-4"
+		/></Button>
 		<div class="img overflow-hidden w-auto h-32">
-			<img :src="item.img" alt="pizza image" class="w-full h-full mb-2 object-cover" />
+			<img
+				:src="config.SERVER_BASE_URL + '/' + item.img"
+				:alt="`${item.name} chizzaro pizza gurlan xorazm urganch`"
+				class="w-full h-full mb-2 object-cover"
+			/>
 		</div>
 		<div class="text text-left self-start my-2">
 			<h3 class="text-xl font-extrabold">{{ item.name }}</h3>

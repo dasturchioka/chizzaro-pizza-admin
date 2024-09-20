@@ -38,6 +38,7 @@ const selectedItemsNumber = computed(() => {
 })
 
 onMounted(async () => {
+	console.log('hello')
 	await itemsStore.getAllItems()
 })
 

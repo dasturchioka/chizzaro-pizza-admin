@@ -73,9 +73,29 @@ export const useItems = defineStore('items-store', () => {
 
 	async function createItem(data: FormData) {
 		try {
-			const response = await itemsInstance.post('/create')
-		} catch (error) {
-			
+			const response = await itemsInstance.post('/create', data, {
+				headers: {
+					'Content-Type': 'multipart/form-data', // Ensure the correct Content-Type is set
+				},
+			})
+
+			if (!response) {
+				toast("Internet yoki server bilan aloqa yo'q")
+				return
+			}
+
+			const foundItem = items.value?.find(i => i.id === response.data.categoryId)
+			if (foundItem) {
+				foundItem.items.push(response.data.item)
+				return
+			}
+		} catch (error: any) {
+			console.log(error)
+			toast(
+				error.message ||
+					error.response.data.msg ||
+					'Xatolik yuzaga keldi, boshqatdan ishga tushiring'
+			)
 		}
 	}
 
@@ -159,6 +179,7 @@ export const useItems = defineStore('items-store', () => {
 		createCategory,
 		getCategoryTypes,
 		itemTypes,
+		createItem,
 		id,
 	}
 })
