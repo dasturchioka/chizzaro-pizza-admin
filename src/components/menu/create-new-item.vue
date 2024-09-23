@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref, toRefs, watch } from 'vue'
+import { computed, onMounted, ref, toRefs } from 'vue'
 import Button from '../ui/button/Button.vue'
 import { Input as AppInput } from '../ui/input'
 import Label from '../ui/label/Label.vue'
-import { Check, CheckCheck, CirclePlus } from 'lucide-vue-next'
+import { CheckCheck, CirclePlus } from 'lucide-vue-next'
 import { useItems } from '@/stores/category-items'
 import { toast } from 'vue-sonner'
 import { storeToRefs } from 'pinia'
@@ -15,7 +15,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select'
-import SelectLabel from '../ui/select/SelectLabel.vue'
 import {
 	Dialog,
 	DialogContent,
@@ -24,6 +23,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
+	DialogClose,
 } from '@/components/ui/dialog'
 import Textarea from '../ui/textarea/Textarea.vue'
 
@@ -212,14 +212,16 @@ onMounted(async () => {
 				</div>
 			</form>
 			<DialogFooter>
-				<Button
-					@click="createNewItem"
-					:disabled="buttonDisabled"
-					class="sm:w-auto w-full"
-					type="submit"
-				>
-					<CheckCheck class="w-4 h-4 mr-2" /> Saqlash
-				</Button>
+				<DialogClose as-child>
+					<Button
+						@click="createNewItem"
+						:disabled="buttonDisabled"
+						class="sm:w-auto w-full"
+						type="submit"
+					>
+						<CheckCheck class="w-4 h-4 mr-2" /> Saqlash
+					</Button>
+				</DialogClose>
 			</DialogFooter>
 		</DialogContent>
 	</Dialog>
