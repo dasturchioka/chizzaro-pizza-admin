@@ -1,16 +1,29 @@
 <script lang="ts" setup>
 import Header from '../ui/header/Header.vue'
-
 import { type Item as ItemType } from '@/stores/category-items'
-import { CircleMinus, CirclePlus } from 'lucide-vue-next'
+import { computed, defineAsyncComponent, toRefs } from 'vue'
 import Button from '../ui/button/Button.vue'
-import Item from './item.vue'
-import { computed, toRefs } from 'vue'
-import CreateNewItem from './create-new-item.vue'
+import { Trash } from 'lucide-vue-next'
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+import { useItems } from '@/stores/category-items'
+const Item = defineAsyncComponent(() => import('./item.vue'))
+const CreateNewItem = defineAsyncComponent(() => import('./create-new-item.vue'))
 
-const props = defineProps<{ category: string; items: ItemType[] }>()
+const props = defineProps<{ category: string; items: ItemType[], categoryId: string }>()
 
-const { items, category } = toRefs(props)
+const itemsStore = useItems()
+
+const { items, category, categoryId } = toRefs(props)
 
 const renderItemsLength = computed(() => {
 	if (items.value.length === 0) {
@@ -19,14 +32,35 @@ const renderItemsLength = computed(() => {
 
 	return `Jami <b>${items.value.length}</b>`
 })
+
+async function deleteCategory() {
+	await itemsStore.removeCategory(categoryId.value)
+}
 </script>
 
 <template>
 	<div class="py-4">
-		<div class="titles flex items-center justify-between">
-			<Header class="text-lg mb-4 font-semibold font-raleway">
+		<div class="titles flex items-center justify-start mb-4 space-x-4">
+			<Header class="text-lg font-semibold font-raleway">
 				{{ category }}
 			</Header>
+			<AlertDialog>
+				<AlertDialogTrigger as-child>
+					<Button size="icon" variant="destructive"><Trash class="w-4 h-4" /> </Button>
+				</AlertDialogTrigger>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle class="dark:text-neutral-50">Ishonchingiz komilmi?</AlertDialogTitle>
+						<AlertDialogDescription>
+							Siz <b>{{ category }}</b> kategoriyasini va undagi barcha mahsulotlarni o'chirib yubormoqchisiz
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel>Yo'q</AlertDialogCancel>
+						<AlertDialogAction @click="deleteCategory">Ha</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 		</div>
 		<div class="scroll-container w-full overflow-x-auto pb-4">
 			<div class="flex space-x-4 max-w-full">

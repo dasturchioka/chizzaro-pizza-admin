@@ -17,7 +17,13 @@ export interface Item {
 	price: string
 	quantity: number
 	img: string
-	category: string
+	category: {
+		name: string
+		[key: string]: any
+	}
+	description: string
+	sold?: number
+	[key: string]: any
 }
 
 export const useItems = defineStore('items-store', () => {
@@ -25,6 +31,17 @@ export const useItems = defineStore('items-store', () => {
 	const items = ref<CategoryOfItems[]>()
 	const selectedItems = ref<Item[]>([])
 	const itemTypes = ref<{ name: string; isOnTheBase: boolean }[]>([])
+	const itemForShowPage = ref<Item>({
+		id: '',
+		name: '',
+		size: '',
+		price: '',
+		quantity: 0,
+		img: '',
+		category: { name: '' },
+		sold: 0,
+		description: '',
+	})
 
 	async function createCategory(name: string) {
 		try {
@@ -49,6 +66,8 @@ export const useItems = defineStore('items-store', () => {
 
 	async function getCategoryTypes() {
 		try {
+			if (itemTypes.value.length) return
+
 			const response = await categoryInstance.get('/get-category-types')
 
 			if (!response) {
@@ -119,6 +138,141 @@ export const useItems = defineStore('items-store', () => {
 		}
 	}
 
+	async function getSingleItem(id: string) {
+		try {
+			const response = await itemsInstance.get('/get-item/' + id)
+
+			if (!response) {
+				toast("Yuklashda xatolik bo'ldi")
+				return
+			}
+
+			if (response.data.status === 'bad') {
+				toast(response.data.msg)
+				return
+			}
+
+			itemForShowPage.value = response.data.item
+		} catch (error: any) {
+			console.log(error)
+			toast(
+				error.message ||
+					error.response.data.msg ||
+					'Xatolik yuzaga keldi, boshqatdan ishga tushiring'
+			)
+		}
+	}
+
+	async function updateItem(data: FormData, id: string) {
+		try {
+			const response = await itemsInstance.put('/update-item/' + id, data)
+
+			if (!response) {
+				toast("Yuklashda xatolik bo'ldi")
+				return
+			}
+
+			if (response.data.status === 'bad') {
+				toast(response.data.msg)
+				return
+			}
+
+			const updatedItem = await response.data.item
+
+			// Find the current category of the item
+			const currentCategory = items.value?.find(category =>
+				category.items.some(item => item.id === id)
+			)
+
+			if (currentCategory) {
+				if (currentCategory?.id !== updatedItem.categoryId) {
+					// Remove the item from the current category
+					if (currentCategory) {
+						currentCategory.items = currentCategory.items.filter(item => item.id !== updatedItem.id)
+					}
+
+					const newCategory = items.value?.find(category => category.id === updatedItem.categoryId)
+
+					if (newCategory) {
+						const findItem = newCategory.items.find(i => i.id === updatedItem.id)
+						if (findItem) {
+							newCategory.items = newCategory.items.filter(item => item.id !== updatedItem.id)
+						}
+						newCategory.items.push(updatedItem)
+					}
+				}
+			}
+
+			itemForShowPage.value = updatedItem
+
+			if (!items.value) return
+
+			const category = items.value.find(c => c.id === updatedItem.categoryId)
+
+			if (category) {
+				// Find the item by itemId within the items array
+				const item = category.items.find(i => i.id === updatedItem.id)
+
+				if (item) {
+					// Update the item properties
+					Object.assign(item, updatedItem)
+				}
+			}
+
+			toast(response.data.msg)
+		} catch (error: any) {
+			console.log(error)
+			toast(
+				error.message ||
+					error.response.data.msg ||
+					'Xatolik yuzaga keldi, boshqatdan ishga tushiring'
+			)
+		}
+	}
+
+	async function deleteItems() {
+		try {
+			const response = await itemsInstance.delete('/delete-items', {
+				data: {
+					items: [...selectedItems.value],
+				},
+			})
+
+			if (!response) {
+				toast("Yuklashda xatolik bo'ldi")
+				return
+			}
+
+			if (response.data.status === 'bad') {
+				toast(response.data.msg)
+				return
+			}
+
+			// Find the category that contains the item
+
+			toast(response.data.msg)
+
+			selectedItems.value.forEach(item => {
+				const category = items.value?.find(category => category.id === item.categoryId)
+				if (category) {
+					category.items = category.items.filter(item => item.id !== item.id)
+				}
+			})
+
+			selectedItems.value = []
+			toast("Mahsulotlar o'chirildi")
+
+			// Remove the item from the category's items array
+		} catch (error: any) {
+			console.log(error)
+			toast(
+				error.message ||
+					error.response.data.msg ||
+					'Xatolik yuzaga keldi, boshqatdan ishga tushiring'
+			)
+		}
+	}
+
 	async function selectItem(item: Item) {
 		try {
 			const findItem = selectedItems.value.find(i => i.id === item.id)
@@ -168,6 +322,32 @@ export const useItems = defineStore('items-store', () => {
 		})
 	}
 
+	async function removeCategory(id: string) {
+		try {
+			const response = await categoryInstance.delete(`/delete-category/${id}`)
+
+			if (!response) {
+				toast("Yuklashda xatolik bo'ldi")
+				return
+			}
+
+			if (response.data.status === 'bad') {
+				toast(response.data.msg)
+				return
+			}
+
+			items.value = items.value?.filter(i => i.id !== id)
+			toast(response.data.msg)
+		} catch (error: any) {
+			console.log(error)
+			toast(
+				error.message ||
+					error.response.data.msg ||
+					'Xatolik yuzaga keldi, boshqatdan ishga tushiring'
+			)
+		}
+	}
+
 	return {
 		getAllItems,
 		items,
@@ -180,6 +360,11 @@ export const useItems = defineStore('items-store', () => {
 		getCategoryTypes,
 		itemTypes,
 		createItem,
+		getSingleItem,
+		itemForShowPage,
+		deleteItems,
+		updateItem,
+		removeCategory,
 		id,
 	}
 })

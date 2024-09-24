@@ -116,6 +116,12 @@ const createNewItem = async () => {
 			category: '',
 			img: undefined,
 		}
+		form.delete('name')
+		form.delete('size')
+		form.delete('price')
+		form.delete('description')
+		form.delete('category')
+		form.delete('img')
 	}
 }
 

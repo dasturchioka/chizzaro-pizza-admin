@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import CreateNewCategory from '@/components/menu/create-new-category.vue'
-import ItemCategory from '@/components/menu/item-category.vue'
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -17,7 +15,12 @@ import { Header } from '@/components/ui/header'
 import { useItems } from '@/stores/category-items'
 import { CheckCheck, CirclePlus, Pizza, RotateCcw, Trash, CircleMinus } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
-import { computed, onMounted, ref } from 'vue'
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue'
+
+const CreateNewCategory = defineAsyncComponent(
+	() => import('@/components/menu/create-new-category.vue')
+)
+const ItemCategory = defineAsyncComponent(() => import('@/components/menu/item-category.vue'))
 
 const showCreateCategory = ref(false)
 
@@ -41,8 +44,8 @@ onMounted(async () => {
 	await itemsStore.getAllItems()
 })
 
-const deleteAll = () => {
-	console.log('deleted')
+async function deleteItems() {
+	await itemsStore.deleteItems()
 }
 </script>
 
@@ -73,7 +76,7 @@ const deleteAll = () => {
 						</AlertDialogHeader>
 						<AlertDialogFooter>
 							<AlertDialogCancel>Yo'q</AlertDialogCancel>
-							<AlertDialogAction @click="deleteAll">Ha</AlertDialogAction>
+							<AlertDialogAction @click="deleteItems">Ha</AlertDialogAction>
 						</AlertDialogFooter>
 					</AlertDialogContent>
 				</AlertDialog>
@@ -100,10 +103,10 @@ const deleteAll = () => {
 				>
 			</div>
 		</div>
-		<CreateNewCategory v-show="showCreateCategory" />
+		<CreateNewCategory v-if="showCreateCategory" />
 		<section class="foods-on-menu w-full">
 			<div class="pb-8 sm:mt-6 mt-2 w-full" v-for="(i, index) in items" :key="index">
-				<ItemCategory :category="i.name" :items="i.items" />
+				<ItemCategory :category="i.name" :items="i.items" :categoryId="i.id" />
 			</div>
 		</section>
 	</div>

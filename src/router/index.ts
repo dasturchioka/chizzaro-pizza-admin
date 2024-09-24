@@ -16,19 +16,24 @@ const routes: RouteRecordRaw[] = [
 				path: 'menu',
 				component: () => import('@/pages/menu-page.vue'),
 			},
+			{
+				name: 'default-item-show',
+				path: 'item/:id',
+				component: () => import('@/pages/item-show-page.vue'),
+			},
 		],
 	},
 	{
 		name: 'not-found',
 		path: '/:pathMatch(.*)*',
-		component: () => import("@/layouts/default-layout.vue"),
+		component: () => import('@/layouts/default-layout.vue'),
 		children: [
 			{
-				path: "",
-				name: "not-found-page",
-				component: () => import("@/pages/not-found-page.vue"),
-			}
-		]
+				path: '',
+				name: 'not-found-page',
+				component: () => import('@/pages/not-found-page.vue'),
+			},
+		],
 	},
 ]
 
