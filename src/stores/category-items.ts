@@ -248,19 +248,15 @@ export const useItems = defineStore('items-store', () => {
 				return
 			}
 
-			// Find the category that contains the item
-
-			toast(response.data.msg)
-
 			selectedItems.value.forEach(item => {
 				const category = items.value?.find(category => category.id === item.categoryId)
 				if (category) {
-					category.items = category.items.filter(item => item.id !== item.id)
+					category.items = category.items.filter(i => i.id !== item.id)
 				}
 			})
 
 			selectedItems.value = []
-			toast("Mahsulotlar o'chirildi")
+			toast(response.data.msg)
 
 			// Remove the item from the category's items array
 		} catch (error: any) {
