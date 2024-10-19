@@ -2,29 +2,8 @@ import { defineStore } from 'pinia'
 import { categoryInstance, itemsInstance } from '@/http'
 import { ref } from 'vue'
 import { toast } from 'vue-sonner'
+import { CategoryOfItems, Item } from '@/models'
 
-export interface CategoryOfItems {
-	id: string
-	name: string
-	items: Item[]
-	[key: string]: any
-}
-
-export interface Item {
-	id: string
-	name: string
-	size: string
-	price: string
-	quantity: number
-	img: string
-	category: {
-		name: string
-		[key: string]: any
-	}
-	description: string
-	sold?: number
-	[key: string]: any
-}
 
 export const useItems = defineStore('items-store', () => {
 	const id = ref('items-store')

@@ -21,6 +21,11 @@ const routes: RouteRecordRaw[] = [
 				path: 'item/:id',
 				component: () => import('@/pages/item-show-page.vue'),
 			},
+			{
+				name: 'default-couriers',
+				path: 'couriers',
+				component: () => import('@/pages/couriers-page.vue'),
+			},
 		],
 	},
 	{
